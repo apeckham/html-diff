@@ -20,3 +20,4 @@ Also works with local files:
 ## Todo
 
 - Exit after launching the diff program
+- Fix `cat already refers to: #'clojure.core/cat` warning
