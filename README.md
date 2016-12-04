@@ -1,5 +1,5 @@
 # html-diff
-Show a visual diff of two HTML pages
+Show a visual diff of two HTML pages, based on their Hiccup representations
 
 ## Installation
 
