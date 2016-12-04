@@ -20,5 +20,5 @@ Also works with local files:
 
 ## Todo
 
-- Doesn't exit
+- Exit after launching the diff program
 - Fix `cat already refers to: #'clojure.core/cat` warning
