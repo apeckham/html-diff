@@ -1,5 +1,15 @@
 #!/usr/bin/env inlein
 
-'{:dependencies [[org.clojure/clojure "1.8.0"]]}
+'{:dependencies [[org.clojure/clojure "1.8.0"]
+                 [hickory "0.7.0"]
+                 [gui-diff "0.6.7"]]}
 
-(println "hello world!")
+(require '[hickory.core :as hickory]
+         '[gui.diff :refer [gui-diff-data]])
+
+(defn parse [url]
+  (-> url slurp hickory/parse hickory/as-hiccup))
+
+(let [[url1 url2] *command-line-args*]
+  (gui-diff-data (parse url1) (parse url2))
+  (prn "done"))
