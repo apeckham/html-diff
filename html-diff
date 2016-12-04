@@ -2,14 +2,47 @@
 
 '{:dependencies [[org.clojure/clojure "1.8.0"]
                  [hickory "0.7.0"]
-                 [gui-diff "0.6.7"]]}
+                 [fipp "0.6.7"]
+                 [http-kit "2.2.0"]]}
 
 (require '[hickory.core :as hickory]
-         '[gui.diff :refer [gui-diff-data]])
+         '[org.httpkit.client :as http-kit]
+         '[fipp.edn :as fipp]
+         '[clojure.java.shell :refer [sh]])
 
 (defn parse [url]
-  (println (str "Fetching " url))
-  (-> url slurp hickory/parse hickory/as-hiccup))
+      (println "Fetching" url)
+      (-> url
+          slurp
+          hickory/parse
+          hickory/as-hiccup))
 
-(let [[url1 url2] *command-line-args*]
-  (gui-diff-data (parse url1) (parse url2)))
+(defn tempfile []
+      (java.io.File/createTempFile "html" ".html"))
+
+(defn write [object file]
+      (with-open [w (clojure.java.io/writer file)]
+                 (binding [*out* w]
+                          (fipp/pprint object))))
+
+(defn diff [file1 file2]
+      (:out (sh "diff" "-Naur" file1 file2)))
+
+(defn diffy [content]
+      (->> {:follow-redirects false
+            :insecure?        true
+            :multipart        [{:name "udiff" :content content}]}
+           (http-kit/post "https://diffy.org/new")
+           deref
+           :headers
+           :location
+           (str "https://diffy.org")))
+
+(let [[url1 url2] *command-line-args*
+      file1 (tempfile)
+      file2 (tempfile)]
+     (write (parse url1) file1)
+     (write (parse url2) file2)
+     (-> (diff (.getAbsolutePath file1) (.getAbsolutePath file2))
+         diffy
+         println))
