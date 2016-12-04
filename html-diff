@@ -8,8 +8,8 @@
          '[gui.diff :refer [gui-diff-data]])
 
 (defn parse [url]
+  (println (str "Fetching " url))
   (-> url slurp hickory/parse hickory/as-hiccup))
 
 (let [[url1 url2] *command-line-args*]
-  (gui-diff-data (parse url1) (parse url2))
-  (prn "done"))
+  (gui-diff-data (parse url1) (parse url2)))
