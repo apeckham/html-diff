@@ -2,17 +2,11 @@
 
 Show a visual diff of two HTML files by comparing their [Hiccup representations](https://github.com/weavejester/hiccup#syntax)
 
-## Installation
-
-Install Inlein: http://inlein.org/#install
-
 ## Usage
 
-`./html-diff http://www.google.com/ http://www.google.fr/`
+`lein run -- http://google.com/ http://google.fr/`
 
-Also works with local files:
-
-`./html-diff ./1.html ./2.html`
+Also works with local paths.
 
 ## Picture
 
